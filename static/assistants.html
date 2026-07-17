@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>课程助手｜PyLearnSpark</title>
+  <link rel="stylesheet" href="/static/styles.css?v=7" />
+</head>
+<body class="profile-body">
+  <header class="profile-topbar">
+    <a class="brand compact" href="/"><div class="brand-logo">Py</div><div><div class="brand-title">PyLearnSpark</div><div class="brand-subtitle">课程知识空间</div></div></a>
+    <nav class="profile-nav"><a href="/chat">返回答疑</a></nav>
+  </header>
+  <main class="assistant-main">
+    <section class="assistant-heading">
+      <div><span class="badge">LightRAG 1.5.4</span><h1>课程助手</h1><p>公共课程彼此隔离；你上传的资料会进入只属于当前用户的新 workspace。</p></div>
+      <div id="ragStatus" class="review-badge">检测中</div>
+    </section>
+    <div class="assistant-layout">
+      <section class="assistant-panel"><h2>公共课程</h2><div id="publicCourses" class="assistant-list"></div></section>
+      <section class="assistant-panel">
+        <h2>创建自己的课程助手</h2>
+        <form id="assistantForm" class="assistant-form">
+          <label>助手名<input name="name" required maxlength="80" placeholder="例如：数据结构期末助手" /></label>
+          <label>课程名<input name="course_name" required maxlength="120" placeholder="例如：数据结构" /></label>
+          <label>领域<select name="domain"><option value="programming">编程</option><option value="math">数学</option><option value="politics">思政</option><option value="other">其他</option></select></label>
+          <label>学习目标<textarea name="learning_goal" rows="2" placeholder="例如：两周内完成期末复习"></textarea></label>
+          <label>回答偏好<textarea name="answer_preference" rows="2" placeholder="例如：先给结论，再给教材依据"></textarea></label>
+          <button class="primary-btn" type="submit">创建助手</button>
+        </form>
+        <div id="createResult" class="assistant-feedback"></div>
+      </section>
+    </div>
+    <section id="customPanel" class="assistant-panel" hidden>
+      <div class="assistant-panel-head"><div><h2 id="customTitle">我的课程助手</h2><p id="customMeta"></p></div><span id="customStatus" class="review-badge"></span></div>
+      <form id="uploadForm" class="upload-row"><input id="documentFile" type="file" accept=".pdf,.docx,.pptx,.txt,.md,.markdown" required /><button class="primary-btn" type="submit">上传并建立索引</button></form>
+      <div id="jobProgress" class="job-progress" hidden><div><span id="jobStage">等待</span><strong id="jobPercent">0%</strong></div><progress id="jobBar" max="100" value="0"></progress></div>
+      <div id="documentList" class="assistant-list"></div>
+      <form id="assistantQueryForm" class="assistant-query"><textarea id="assistantQuestion" rows="2" placeholder="索引完成后，依据刚上传的资料提问" required></textarea><button class="primary-btn" type="submit">提问</button></form>
+      <article id="assistantAnswer" class="assistant-answer" hidden></article>
+    </section>
+  </main>
+  <script src="/static/assistants.js?v=1"></script>
+</body>
+</html>

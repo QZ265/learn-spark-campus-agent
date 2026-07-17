@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>动态学生画像｜PyLearnSpark</title>
+  <link rel="stylesheet" href="/static/styles.css?v=5" />
+</head>
+<body class="profile-body">
+  <header class="profile-topbar">
+    <a class="brand compact" href="/" title="返回主页">
+      <div class="brand-logo">Py</div>
+      <div>
+        <div class="brand-title">PyLearnSpark</div>
+        <div class="brand-subtitle">动态学生画像</div>
+      </div>
+    </a>
+    <nav class="profile-nav">
+      <a href="/chat">返回智能答疑</a>
+    </nav>
+  </header>
+
+  <main class="profile-main">
+    <section class="profile-hero-panel">
+      <div>
+        <span class="badge">随学随新</span>
+        <h1>动态学生画像</h1>
+        <p>画像只记录对话、练习和学习行为中有证据的信息；尚未观察到的内容会明确标为待确认。</p>
+      </div>
+      <div class="profile-summary" id="profileSummary">
+        <strong>等待画像生成</strong>
+        <span>先在智能答疑页提一个问题，系统会自动更新画像。</span>
+      </div>
+    </section>
+
+    <section class="profile-detail-panel profile-record-section">
+      <div class="profile-section-head">
+        <div>
+          <h2>当前画像</h2>
+          <p>每一项都可追溯到原始证据。</p>
+        </div>
+      </div>
+      <div id="profileRecords" class="profile-record-grid"></div>
+    </section>
+
+    <section class="profile-layout lower">
+      <div class="profile-detail-panel">
+        <h2>最近变化</h2>
+        <div id="profileChanges" class="profile-timeline"></div>
+      </div>
+      <div class="profile-detail-panel">
+        <h2>信息不足项</h2>
+        <div id="profileMissing" class="missing-grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/profile.js?v=4"></script>
+</body>
+</html>

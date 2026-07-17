@@ -1,0 +1,15 @@
+.env
+config_keys.env
+data/app.db
+data/course_material_inventory.csv
+data/course_material_manifest.json
+__pycache__/
+*.py[cod]
+.venv/
+.venv-lightrag/
+data/lightrag/
+data/models/
+data/uploads/
+data/incoming/
+data/parsed/
+server_start_log.txt

@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>智能答疑｜PyLearnSpark</title>
+  <link rel="stylesheet" href="/static/styles.css?v=5" />
+</head>
+<body class="chat-body">
+  <div id="chatApp" class="chat-app">
+    <aside class="chat-sidebar">
+      <div class="sidebar-top">
+        <a class="brand compact sidebar-brand" href="/" title="返回主页">
+          <div class="brand-logo">Py</div>
+          <div class="sidebar-brand-text">
+            <div class="brand-title">PyLearnSpark</div>
+            <div class="brand-subtitle">智能答疑</div>
+          </div>
+        </a>
+        <button id="sidebarToggle" class="icon-btn" type="button" title="收起侧栏">‹</button>
+      </div>
+
+      <button id="newChatBtn" class="new-chat-btn" type="button">新建对话</button>
+
+      <div id="historyShell" class="history-shell">
+        <div class="history-head">
+          <h3>历史对话</h3>
+        </div>
+        <div id="historyList" class="history-list empty">暂无历史。</div>
+      </div>
+    </aside>
+
+    <main class="chat-main">
+      <header class="chat-header">
+        <div>
+          <h1>和课程智能体对话</h1>
+          <label class="course-picker">当前课程 <select id="courseSelect" aria-label="选择当前课程"></select></label>
+          <button id="modeButton" class="mode-trigger" type="button">
+            <span>当前模式</span>
+            <strong id="chatMode">Flash 快速模式</strong>
+          </button>
+          <p id="modeHelp">Flash 是本地轻量模式，回答更快；切到 Spark X 后会调用讯飞星火大模型生成更自然的讲解。</p>
+        </div>
+        <div class="chat-header-actions"><a class="profile-entry" href="/assistants">课程助手</a><a class="profile-entry" href="/profile">动态学生画像</a></div>
+      </header>
+
+      <section id="chatMessages" class="chat-messages" aria-live="polite">
+        <article class="message assistant">
+          <div class="avatar">AI</div>
+          <div class="bubble">
+            <strong>你好，我是课程学习智能体。</strong>
+            <p>请选择课程后提问。已建立 LightRAG 索引的课程会严格限定在当前知识空间并返回教材引用。</p>
+          </div>
+        </article>
+      </section>
+
+      <section id="quickPrompts" class="quick-prompts">
+        <button data-prompt="Python变量是什么？用一个生活类比和一段最小代码说明。">变量入门</button>
+        <button data-prompt="Python的if判断怎么用？请只讲核心用法，给一个例子。">if 判断</button>
+        <button data-prompt="怎么用Python做一个简单的成绩判断小项目？先给我核心思路和最小代码。">项目实操</button>
+        <button id="promptRefresh" class="prompt-refresh" type="button">换一组</button>
+      </section>
+
+      <form id="chatForm" class="chat-composer">
+        <div class="input-shell">
+          <textarea id="chatInput" rows="2" placeholder="输入你的学习问题，例如：我是零基础，Python变量是什么？"></textarea>
+          <button id="voiceButton" class="voice-btn" type="button" title="语音输入" aria-label="语音输入">
+            <svg class="voice-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z"></path>
+              <path d="M19 11a7 7 0 0 1-14 0"></path>
+              <path d="M12 18v3"></path>
+              <path d="M8 21h8"></path>
+            </svg>
+          </button>
+        </div>
+        <button id="chatSend" class="primary-btn" type="submit">发送</button>
+        <div id="voiceStatus" class="voice-status" aria-live="polite"></div>
+      </form>
+    </main>
+
+    <div id="modeModal" class="modal-backdrop" hidden>
+      <section class="mode-modal" role="dialog" aria-modal="true" aria-labelledby="modeTitle">
+        <div class="modal-head">
+          <div>
+            <h2 id="modeTitle">选择回答模式</h2>
+            <p>这里选择答疑生成方式；动态画像、资源生成和内容审核会优先调用已发布的讯飞星辰 Workflow。</p>
+          </div>
+          <button id="modeClose" class="icon-btn" type="button" title="关闭">×</button>
+        </div>
+        <div class="mode-options">
+          <button class="mode-option active" data-mode="flash" type="button">
+            <strong>Flash快速模式</strong>
+            <span>答疑来自本地课程知识库；画像、资源和审核仍会按配置调用星辰，调用结果会真实标记。</span>
+          </button>
+          <button class="mode-option" data-mode="spark" type="button">
+            <strong>Spark X大模型模式</strong>
+            <span>调用讯飞星火大模型 Spark X 生成回答。表达更自然，适合需要细讲解时使用；接口较慢或失败时会保留本地快速结果作为兜底。</span>
+          </button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="/static/chat.js?v=6"></script>
+</body>
+</html>

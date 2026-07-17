@@ -1,0 +1,58 @@
+[
+  {
+    "id": "PYDOC-TUTORIAL",
+    "title": "Python 官方教程",
+    "url": "https://docs.python.org/zh-cn/3/tutorial/index.html",
+    "publisher": "Python Software Foundation",
+    "topics": ["Python", "入门", "环境", "运行", "脚本", "复习"]
+  },
+  {
+    "id": "PYDOC-INTRO",
+    "title": "Python 官方教程：Python 解释器与非正式介绍",
+    "url": "https://docs.python.org/zh-cn/3/tutorial/introduction.html",
+    "publisher": "Python Software Foundation",
+    "topics": ["变量", "字符串", "整数", "浮点数", "列表", "下标", "数据类型"]
+  },
+  {
+    "id": "PYDOC-CONTROL",
+    "title": "Python 官方教程：更多流程控制工具",
+    "url": "https://docs.python.org/zh-cn/3/tutorial/controlflow.html",
+    "publisher": "Python Software Foundation",
+    "topics": ["if", "elif", "else", "条件判断", "for", "while", "range", "break", "continue", "函数", "def", "return"]
+  },
+  {
+    "id": "PYDOC-DATA",
+    "title": "Python 官方教程：数据结构",
+    "url": "https://docs.python.org/zh-cn/3/tutorial/datastructures.html",
+    "publisher": "Python Software Foundation",
+    "topics": ["列表", "字典", "list", "dict", "append", "遍历", "键值对"]
+  },
+  {
+    "id": "PYDOC-IO",
+    "title": "Python 官方教程：输入与输出",
+    "url": "https://docs.python.org/zh-cn/3/tutorial/inputoutput.html",
+    "publisher": "Python Software Foundation",
+    "topics": ["input", "print", "输入", "输出", "f-string", "格式化输出", "文件", "open", "read", "write"]
+  },
+  {
+    "id": "PYDOC-ERRORS",
+    "title": "Python 官方教程：错误和异常",
+    "url": "https://docs.python.org/zh-cn/3/tutorial/errors.html",
+    "publisher": "Python Software Foundation",
+    "topics": ["异常", "try", "except", "报错", "调试"]
+  },
+  {
+    "id": "PYDOC-GLOSSARY",
+    "title": "Python 官方术语表",
+    "url": "https://docs.python.org/zh-cn/3/glossary.html",
+    "publisher": "Python Software Foundation",
+    "topics": ["定义", "术语", "对象", "变量", "函数", "参数"]
+  },
+  {
+    "id": "PEP-0008",
+    "title": "PEP 8：Python 代码风格指南",
+    "url": "https://peps.python.org/pep-0008/",
+    "publisher": "Python Software Foundation",
+    "topics": ["代码风格", "缩进", "命名", "可读性", "项目", "实验报告"]
+  }
+]

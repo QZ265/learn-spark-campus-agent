@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campus Lumina｜校园智能学习中枢</title>
+  <link rel="stylesheet" href="/static/styles.css?v=9" />
+</head>
+<body class="lumina-body dashboard-body">
+  <main class="lumina-stage">
+    <section class="lumina-shell dashboard-shell">
+      <aside class="lumina-sidebar">
+        <a class="lumina-brand" href="/" aria-label="返回 Dashboard">
+          <span class="lumina-brand-mark">CL</span>
+          <span><strong>Campus Lumina</strong><small>校园智能学习中枢</small></span>
+        </a>
+        <nav class="lumina-nav" aria-label="主导航">
+          <a class="active" href="/"><span class="nav-symbol">⌂</span>Dashboard</a>
+          <a href="/chat"><span class="nav-symbol">✦</span>智能 Agent</a>
+          <a href="/profile"><span class="nav-symbol">◌</span>学生画像</a>
+          <a href="/chat?q=请根据我当前的学习情况生成一套个性化学习资源。"><span class="nav-symbol">▤</span>资源生成</a>
+          <a href="/chat?q=请根据我最近的练习记录评估学习效果。"><span class="nav-symbol">☷</span>学业评估</a>
+          <a href="/assistants"><span class="nav-symbol">⚙</span>账户设置</a>
+        </nav>
+        <div class="lumina-side-note">
+          <span class="side-note-icon">?</span>
+          <strong>学习支持</strong>
+          <p>遇到问题时，智能 Agent 会结合课程资料、画像证据与审核结果回答。</p>
+          <a href="/chat">开始提问</a>
+        </div>
+      </aside>
+
+      <section class="lumina-main dashboard-main">
+        <header class="lumina-topbar">
+          <label class="lumina-search">
+            <span aria-hidden="true">⌕</span>
+            <input id="dashboardSearch" type="search" placeholder="搜索课程、资源或任务" />
+          </label>
+          <time id="dashboardDate" class="lumina-date"></time>
+        </header>
+
+        <section class="dashboard-welcome">
+          <div class="welcome-copy">
+            <h1>Welcome back, <span id="welcomeUser">同学</span>!</h1>
+            <a class="lumina-primary-btn" href="/chat">进入智能 Agent <span>→</span></a>
+          </div>
+          <div class="book-illustration" aria-label="三本课程书籍插画">
+            <div class="book book-indigo"><span>LEARN</span><i></i></div>
+            <div class="book book-teal"><span>THINK</span><i></i></div>
+            <div class="book book-orange"><span>CREATE</span><i></i></div>
+            <div class="book-shadow"></div>
+          </div>
+        </section>
+
+        <section class="dashboard-section">
+          <div class="lumina-section-head">
+            <div><span>Learning Hub</span><h2>今天从这里开始</h2></div>
+            <a href="/chat">进入工作区</a>
+          </div>
+          <div class="dashboard-feature-grid">
+            <a class="dashboard-feature feature-indigo" href="/profile">
+              <span class="feature-icon">◌</span>
+              <div><h3>学习画像构建</h3><p>查看真实对话与练习形成的画像证据。</p></div>
+              <b>→</b>
+            </a>
+            <a class="dashboard-feature feature-teal" href="/chat?q=请根据我当前的学习情况生成一套个性化学习资源。">
+              <span class="feature-icon">▤</span>
+              <div><h3>多模态资源生成</h3><p>生成讲解、题库、思维导图和代码案例。</p></div>
+              <b>→</b>
+            </a>
+            <a class="dashboard-feature feature-orange" href="/chat?q=请结合我的学习目标和当前进度规划下一步学习路径。">
+              <span class="feature-icon">↗</span>
+              <div><h3>学习路径规划</h3><p>结合课程进度、薄弱点与可投入时间安排顺序。</p></div>
+              <b>→</b>
+            </a>
+          </div>
+        </section>
+
+        <section class="dashboard-section task-section">
+          <div class="lumina-section-head">
+            <div><span>Recent Tasks</span><h2>近期任务</h2></div>
+            <a href="/chat">查看对话</a>
+          </div>
+          <div class="lumina-table-card">
+            <table>
+              <thead><tr><th>任务</th><th>来源</th><th>Deadline</th><th>材料</th><th>状态</th></tr></thead>
+              <tbody>
+                <tr><td><strong>补充课程学习目标</strong></td><td>学生画像</td><td data-date-offset="1">--</td><td><a href="/profile">查看画像</a></td><td><span class="task-status status-progress">进行中</span></td></tr>
+                <tr><td><strong>完成一次课程资料问答</strong></td><td>智能 Agent</td><td data-date-offset="2">--</td><td><a href="/chat">进入对话</a></td><td><span class="task-status status-waiting">待开始</span></td></tr>
+                <tr><td><strong>生成个性化练习资源</strong></td><td>资源生成</td><td data-date-offset="4">--</td><td><a href="/chat?q=请根据当前画像生成一组有引用的练习题。">生成资源</a></td><td><span class="task-status status-waiting">待开始</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <aside class="lumina-rightbar">
+        <section class="dashboard-user-card">
+          <div class="user-avatar">L</div>
+          <div><strong id="dashboardUser">学习者</strong><span>Student</span></div>
+          <a href="/profile" title="查看学生画像">→</a>
+        </section>
+
+        <section class="calendar-card">
+          <div class="calendar-head">
+            <button id="calendarPrev" type="button" title="上个月">‹</button>
+            <h3 id="calendarTitle">本月</h3>
+            <button id="calendarNext" type="button" title="下个月">›</button>
+          </div>
+          <div class="calendar-week"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
+          <div id="calendarGrid" class="calendar-grid"></div>
+        </section>
+
+        <section class="reminder-card">
+          <div class="lumina-section-head compact"><div><span>Schedule</span><h2>Reminders</h2></div></div>
+          <div class="reminder-item reminder-indigo"><span></span><div><strong>完善学习画像</strong><time data-reminder-offset="1">--</time></div></div>
+          <div class="reminder-item reminder-teal"><span></span><div><strong>课程知识库问答</strong><time data-reminder-offset="2">--</time></div></div>
+          <div class="reminder-item reminder-orange"><span></span><div><strong>完成学习效果评估</strong><time data-reminder-offset="4">--</time></div></div>
+        </section>
+
+        <section class="service-card">
+          <span class="service-dot"></span>
+          <div><strong>学习服务</strong><small id="serviceSummary">正在检测</small></div>
+        </section>
+      </aside>
+    </section>
+  </main>
+
+  <script src="/static/home.js?v=9"></script>
+</body>
+</html>

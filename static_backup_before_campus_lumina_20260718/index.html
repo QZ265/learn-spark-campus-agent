@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PyLearnSpark｜校园智能学习助手</title>
+  <link rel="stylesheet" href="/static/styles.css?v=5" />
+</head>
+<body class="home-body">
+  <header class="home-topbar">
+    <a class="brand compact" href="/">
+      <div class="brand-logo">Py</div>
+      <div>
+        <div class="brand-title">PyLearnSpark</div>
+        <div class="brand-subtitle">校园智能学习助手</div>
+      </div>
+    </a>
+    <nav class="home-nav">
+      <a href="#agents">智能体架构</a>
+      <a href="#resources">资源能力</a>
+      <a href="#evaluation">学习闭环</a>
+      <a href="/assistants">课程助手</a>
+      <a class="nav-cta" href="/chat">进入智能答疑</a>
+    </nav>
+  </header>
+
+  <main class="home-main">
+    <section class="home-hero">
+      <div class="home-hero-copy">
+        <span class="badge">Python 入门课程 · 星辰 Workflow + Spark X</span>
+        <h1>面向大学生的个性化学习智能体</h1>
+        <p>通过自然语言对话形成有证据的动态学生画像，由 ProfileAgent、ResourceAgent 和 ReviewAgent 协作生成并审核五类学习资源。</p>
+        <form class="home-ask-box" action="/chat" method="get">
+          <textarea name="q" rows="3" placeholder="直接输入你的学习问题，例如：我是零基础，Python变量是什么？" required></textarea>
+          <button class="primary-btn" type="submit">问智能体</button>
+        </form>
+        <div class="hero-actions">
+          <a class="primary-btn" href="/chat">开始和智能体对话</a>
+          <a class="ghost-btn" href="#agents">查看系统设计</a>
+        </div>
+      </div>
+      <div class="home-status-panel">
+        <div class="status-line">
+          <span>当前模式</span>
+          <strong id="homeMode">检测中...</strong>
+        </div>
+        <div class="metric-grid">
+          <div class="metric"><strong>3</strong><span>星辰Agent角色</span></div>
+          <div class="metric"><strong>9</strong><span>证据画像字段</span></div>
+          <div class="metric"><strong>5</strong><span>持久化资源类型</span></div>
+          <div class="metric"><strong>24</strong><span>知识库条目</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="agents" class="home-section">
+      <div class="section-head">
+        <span class="badge">Multi-Agent</span>
+        <h2>不是单一聊天框，而是学习任务流水线</h2>
+        <p>星辰工作流按任务调用三个真实角色；本地知识检索和 SQLite 存储作为可验证的工具层，不冒充 Agent。</p>
+      </div>
+      <div class="agent-grid">
+        <div class="feature-card"><strong>ProfileAgent</strong><p>只从对话和练习中的直接证据抽取画像，记录来源、置信度、冲突和变化。</p></div>
+        <div class="feature-card"><strong>ResourceAgent</strong><p>结合画像证据、课程知识片段和允许引用，生成五类结构化资源。</p></div>
+        <div class="feature-card"><strong>ReviewAgent</strong><p>核对引用支持关系、编造风险和 Python 代码，失败时触发重新生成。</p></div>
+      </div>
+    </section>
+
+    <section id="resources" class="home-section split-section">
+      <div>
+        <span class="badge">Resources</span>
+        <h2>一次对话生成五类可打开资源</h2>
+        <p>轻量版先聚焦 Python 入门课程，后续可把知识库扩展到其他专业课、通识课或校园服务。</p>
+      </div>
+      <div class="resource-showcase">
+        <span>专业课程讲解文档</span>
+        <span>知识点思维导图</span>
+        <span>分层练习题库</span>
+        <span>拓展阅读材料</span>
+        <span>代码实操案例</span>
+      </div>
+    </section>
+
+    <section id="evaluation" class="home-section split-section alt">
+      <div>
+        <span class="badge">Learning Loop</span>
+        <h2>从答疑到评估，再回到个性化推荐</h2>
+        <p>学生提交练习答案后，系统会给分、指出细节问题，并把结果写回画像，形成持续优化的学习闭环。</p>
+      </div>
+      <div class="loop-list">
+        <div><strong>1. 提问</strong><span>学生用自然语言描述困难</span></div>
+        <div><strong>2. 生成</strong><span>系统输出资源和学习路径</span></div>
+        <div><strong>3. 练习</strong><span>学生提交代码或文字答案</span></div>
+        <div><strong>4. 优化</strong><span>更新易错点和资源推送策略</span></div>
+      </div>
+    </section>
+
+    <section class="home-final">
+      <h2>进入真实学习对话页</h2>
+      <p>主页用于展示作品思路；真正答疑、资源生成和学习评估都在单独的智能体对话页完成。</p>
+      <a class="primary-btn" href="/chat">打开智能答疑</a>
+    </section>
+  </main>
+
+  <script src="/static/home.js?v=4"></script>
+</body>
+</html>

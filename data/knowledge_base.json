@@ -1,0 +1,242 @@
+[
+  {
+    "id": "PY-001",
+    "chapter": "第1章 Python入门",
+    "title": "Python是什么，以及为什么适合零基础入门",
+    "tags": ["Python", "入门", "零基础", "环境"],
+    "content": "Python是一门语法接近自然语言的编程语言，适合零基础学习。学习时应先理解变量、输入输出、条件判断、循环、列表、函数，再做小项目。",
+    "examples": ["print('Hello Python')", "name = input('请输入姓名：')"],
+    "common_mistakes": ["没有区分中文符号和英文符号", "把代码当成需要背诵的文字，而不是一步步执行的命令"],
+    "exercises": ["写一行代码输出：我正在学习Python。"]
+  },
+  {
+    "id": "PY-002",
+    "chapter": "第1章 Python入门",
+    "title": "开发环境与运行方式",
+    "tags": ["环境", "运行", "VS Code", "终端", "脚本"],
+    "content": "Python代码可以在交互式解释器、脚本文件或IDE中运行。零基础学生建议先用一个.py文件保存代码，再点击运行或在终端输入python文件名。",
+    "examples": ["# demo.py\nprint('我的第一个Python程序')"],
+    "common_mistakes": ["文件名和命令路径不一致", "没有保存文件就运行", "把代码写到终端命令里导致报错"],
+    "exercises": ["新建demo.py文件，输出自己的姓名和专业。"]
+  },
+  {
+    "id": "PY-003",
+    "chapter": "第2章 变量与数据类型",
+    "title": "变量、字符串、整数和浮点数",
+    "tags": ["变量", "字符串", "整数", "浮点数", "数据类型"],
+    "content": "变量可以理解为贴了名字的盒子，用来保存数据。字符串str表示文字，整数int表示没有小数的数字，浮点数float表示带小数的数字。",
+    "examples": ["age = 18", "price = 9.9", "name = '小明'"],
+    "common_mistakes": ["字符串忘记加引号", "把数字字符串和数字混在一起计算"],
+    "exercises": ["定义变量name和age，并输出一句自我介绍。"]
+  },
+  {
+    "id": "PY-004",
+    "chapter": "第2章 变量与数据类型",
+    "title": "类型转换int、float和str",
+    "tags": ["类型转换", "int", "float", "str", "input"],
+    "content": "input得到的内容默认是字符串。如果要参与数学计算，需要用int或float转换；如果要把数字拼接到文字里，可以用str或格式化字符串。",
+    "examples": ["age = int(input('年龄：'))\nprint(age + 1)", "score = float(input('分数：'))"],
+    "common_mistakes": ["直接把input结果和整数相加", "把不能转成数字的文字传给int或float"],
+    "exercises": ["输入两个数字，转换后计算它们的和。"]
+  },
+  {
+    "id": "PY-005",
+    "chapter": "第3章 输入输出",
+    "title": "input和print",
+    "tags": ["输入", "输出", "input", "print", "交互"],
+    "content": "print用于把结果显示到屏幕上，input用于接收用户输入。input得到的内容默认是字符串，如果要参与数字计算，需要用int或float转换。",
+    "examples": ["name = input('姓名：')\nprint('你好', name)", "age = int(input('年龄：'))"],
+    "common_mistakes": ["input得到的是字符串，直接和整数相加会报错", "print括号或引号不成对"],
+    "exercises": ["输入姓名和年龄，输出：你好，某某，你今年多少岁。"]
+  },
+  {
+    "id": "PY-006",
+    "chapter": "第3章 输入输出",
+    "title": "格式化输出f-string",
+    "tags": ["格式化输出", "f-string", "print", "字符串"],
+    "content": "f-string可以把变量嵌入字符串里，写法是在字符串前面加f，并用大括号放变量。它适合做自我介绍、成绩反馈和项目结果展示。",
+    "examples": ["name = '小明'\nage = 18\nprint(f'你好，我叫{name}，今年{age}岁')"],
+    "common_mistakes": ["忘记在字符串前加f", "大括号和变量名写错", "中英文引号混用"],
+    "exercises": ["用f-string输出姓名、专业和学习目标。"]
+  },
+  {
+    "id": "PY-007",
+    "chapter": "第4章 条件判断",
+    "title": "if、elif、else条件判断",
+    "tags": ["if", "elif", "else", "条件判断", "分支", "冒号", "缩进"],
+    "content": "条件判断用于让程序根据不同情况走不同路线。if后面写条件，条件后面必须有英文冒号，下一行代码必须缩进。elif表示否则如果，else表示以上条件都不满足时执行。",
+    "examples": ["score = 85\nif score >= 60:\n    print('及格')\nelse:\n    print('不及格')"],
+    "common_mistakes": ["if后面忘记英文冒号", "缩进不一致", "把=赋值误写成==判断，或反过来"],
+    "exercises": ["输入一个成绩，判断优秀、及格或不及格。90分及以上优秀，60分及以上及格，否则不及格。"]
+  },
+  {
+    "id": "PY-008",
+    "chapter": "第4章 条件判断",
+    "title": "比较运算和逻辑运算",
+    "tags": ["比较运算", "逻辑运算", "and", "or", "not", "条件判断"],
+    "content": "比较运算用于判断两个值的关系，如>、>=、==。逻辑运算and表示同时满足，or表示满足任意一个，not表示取反。",
+    "examples": ["score = 85\nif score >= 60 and score < 90:\n    print('及格但还不是优秀')"],
+    "common_mistakes": ["把and和or的含义混淆", "多个条件没有加括号导致理解困难"],
+    "exercises": ["输入年龄和成绩，判断是否满足参加竞赛的条件。"]
+  },
+  {
+    "id": "PY-009",
+    "chapter": "第5章 循环",
+    "title": "for循环和range",
+    "tags": ["for", "循环", "range", "重复执行"],
+    "content": "for循环常用于次数明确的重复。range(n)通常表示从0到n-1的一组数字；range(1, 11)表示从1到10。",
+    "examples": ["for i in range(5):\n    print(i)", "for i in range(1, 11):\n    print(i)"],
+    "common_mistakes": ["不理解range(5)不包含5", "循环体忘记缩进"],
+    "exercises": ["用for循环输出1到10。"]
+  },
+  {
+    "id": "PY-010",
+    "chapter": "第5章 循环",
+    "title": "while循环和死循环",
+    "tags": ["while", "循环", "死循环", "条件"],
+    "content": "while循环会在条件成立时一直执行，适合不知道重复次数、但知道停止条件的场景。循环里通常要更新变量，否则可能变成死循环。",
+    "examples": ["count = 1\nwhile count <= 3:\n    print(count)\n    count += 1"],
+    "common_mistakes": ["while循环忘记更新变量导致死循环", "停止条件写反"],
+    "exercises": ["用while循环输出1到5。"]
+  },
+  {
+    "id": "PY-011",
+    "chapter": "第5章 循环",
+    "title": "break和continue",
+    "tags": ["break", "continue", "循环控制", "for", "while"],
+    "content": "break用于提前结束整个循环，continue用于跳过本次循环后继续下一次。它们适合处理查找、过滤和跳过特殊情况。",
+    "examples": ["for i in range(1, 6):\n    if i == 3:\n        continue\n    print(i)"],
+    "common_mistakes": ["把break和continue的效果混淆", "continue后面的代码不会在本轮执行"],
+    "exercises": ["输出1到10中除了5以外的数字。"]
+  },
+  {
+    "id": "PY-012",
+    "chapter": "第6章 列表",
+    "title": "列表list与下标",
+    "tags": ["列表", "list", "下标", "append", "遍历"],
+    "content": "列表用于保存一组数据。下标从0开始。可以用append添加元素，可以用for遍历列表。",
+    "examples": ["scores = [80, 90, 100]\nprint(scores[0])", "names = []\nnames.append('小明')"],
+    "common_mistakes": ["下标从0开始，不是从1开始", "访问不存在的下标会报错"],
+    "exercises": ["创建一个列表保存3个成绩，并计算平均分。"]
+  },
+  {
+    "id": "PY-013",
+    "chapter": "第6章 列表",
+    "title": "列表遍历和简单统计",
+    "tags": ["列表", "遍历", "sum", "len", "平均分"],
+    "content": "列表常和循环一起使用。sum可以求和，len可以得到元素个数，二者配合可以计算平均值。",
+    "examples": ["scores = [80, 90, 100]\navg = sum(scores) / len(scores)\nprint(avg)"],
+    "common_mistakes": ["除以错误的数量", "空列表计算平均值会报错"],
+    "exercises": ["保存5个成绩，输出最高分、最低分和平均分。"]
+  },
+  {
+    "id": "PY-014",
+    "chapter": "第7章 字典",
+    "title": "字典dict和键值对",
+    "tags": ["字典", "dict", "键值对", "学生信息"],
+    "content": "字典用键值对保存结构化信息，适合保存学生画像、课程信息和配置数据。通过键可以快速取到对应值。",
+    "examples": ["student = {'name': '小明', 'major': '软件工程'}\nprint(student['name'])"],
+    "common_mistakes": ["把字典的键写错", "访问不存在的键导致KeyError"],
+    "exercises": ["用字典保存姓名、专业、学习目标，并输出学习目标。"]
+  },
+  {
+    "id": "PY-015",
+    "chapter": "第8章 函数",
+    "title": "函数def、参数和返回值",
+    "tags": ["函数", "def", "参数", "return", "复用"],
+    "content": "函数可以把一段经常使用的代码打包成一个工具。def定义函数，参数是传进去的数据，return是函数处理后的结果。",
+    "examples": ["def add(a, b):\n    return a + b\nprint(add(3, 5))"],
+    "common_mistakes": ["只定义函数但没有调用", "return和print混淆"],
+    "exercises": ["定义一个函数，输入两个数，返回较大的数。"]
+  },
+  {
+    "id": "PY-016",
+    "chapter": "第8章 函数",
+    "title": "函数拆分和代码复用",
+    "tags": ["函数", "拆分", "复用", "项目"],
+    "content": "当代码变长时，可以把输入、处理、输出拆成不同函数。这样更容易测试，也更适合做课程项目。",
+    "examples": ["def judge(score):\n    if score >= 60:\n        return '及格'\n    return '不及格'\nprint(judge(80))"],
+    "common_mistakes": ["函数职责太多", "忘记使用返回值"],
+    "exercises": ["把成绩判断程序拆成一个judge函数。"]
+  },
+  {
+    "id": "PY-017",
+    "chapter": "第9章 文件操作",
+    "title": "读取和写入文本文件",
+    "tags": ["文件", "open", "read", "write", "with"],
+    "content": "文件操作可以把程序结果保存下来。with open可以自动关闭文件。读取用read，写入用write，写入模式'w'会覆盖原文件。",
+    "examples": ["with open('note.txt', 'w', encoding='utf-8') as f:\n    f.write('今天学习Python')"],
+    "common_mistakes": ["忘记设置encoding导致中文乱码", "写入模式覆盖已有内容"],
+    "exercises": ["把自己的学习计划写入plan.txt文件。"]
+  },
+  {
+    "id": "PY-018",
+    "chapter": "第10章 异常处理",
+    "title": "try和except处理报错",
+    "tags": ["异常", "try", "except", "报错", "调试"],
+    "content": "try-except用于处理可能出错的代码，让程序不会因为一个错误直接崩溃。零基础阶段常见错误包括类型转换失败、文件不存在和下标越界。",
+    "examples": ["try:\n    age = int(input('年龄：'))\nexcept ValueError:\n    print('请输入数字')"],
+    "common_mistakes": ["except范围太大导致看不到真实问题", "把所有错误都忽略"],
+    "exercises": ["输入年龄，如果不是数字就提示重新输入。"]
+  },
+  {
+    "id": "PY-019",
+    "chapter": "第11章 调试方法",
+    "title": "看懂报错和逐步调试",
+    "tags": ["调试", "报错", "debug", "print", "定位问题"],
+    "content": "调试不是猜，而是定位。先看报错最后一行，再看文件和行号；也可以用print输出中间变量，确认程序运行到哪一步。",
+    "examples": ["x = '18'\nprint(type(x))\nprint(x)"],
+    "common_mistakes": ["只看第一行报错不看最后一行", "一次改太多地方导致不知道哪个改动生效"],
+    "exercises": ["故意写一个类型转换错误，观察报错信息并解释原因。"]
+  },
+  {
+    "id": "PY-020",
+    "chapter": "第12章 小项目实战",
+    "title": "成绩判断小项目",
+    "tags": ["项目", "成绩", "综合", "条件判断", "输入输出"],
+    "content": "综合项目可以把输入、类型转换、条件判断和输出串起来。先输入成绩，再转换成数字，再根据条件输出等级。",
+    "examples": ["score = int(input('请输入成绩：'))\nif score >= 90:\n    print('优秀')\nelif score >= 60:\n    print('及格')\nelse:\n    print('不及格')"],
+    "common_mistakes": ["忘记把input结果转成int", "elif顺序写反导致判断错误"],
+    "exercises": ["做一个成绩等级判断器，输入成绩，输出优秀、良好、及格或不及格。"]
+  },
+  {
+    "id": "PY-021",
+    "chapter": "第12章 小项目实战",
+    "title": "学习计划生成器项目",
+    "tags": ["项目", "学习路径", "学生画像", "计划", "综合"],
+    "content": "学习计划生成器可以根据学生基础、每天学习时间和目标生成每日任务。它适合练习输入、字典、条件判断、列表和格式化输出。",
+    "examples": ["profile = {'level': '零基础', 'time': '30分钟'}\nprint(f\"当前基础：{profile['level']}，建议先学输入输出\")"],
+    "common_mistakes": ["没有把用户信息结构化保存", "学习任务顺序不清晰"],
+    "exercises": ["用字典保存学生画像，并输出3步学习计划。"]
+  },
+  {
+    "id": "PY-022",
+    "chapter": "第12章 小项目实战",
+    "title": "错题本和易错点记录项目",
+    "tags": ["项目", "错题本", "易错点", "列表", "文件"],
+    "content": "错题本项目用于记录题目、错误原因和改进建议。它可以帮助学生把评估结果转化为下一轮学习资源推送依据。",
+    "examples": ["mistakes = []\nmistakes.append('if后面忘记冒号')\nprint(mistakes)"],
+    "common_mistakes": ["只记录分数不记录原因", "没有根据易错点安排复习"],
+    "exercises": ["创建一个列表保存3个易错点，并逐条输出。"]
+  },
+  {
+    "id": "PY-023",
+    "chapter": "第13章 课程复习",
+    "title": "Python基础知识复习路线",
+    "tags": ["复习", "学习路径", "考试", "知识图谱"],
+    "content": "复习时应按输入输出、变量类型、条件判断、循环、列表、函数、小项目的顺序推进。每个知识点都要做到会解释、会运行、会改动、会做题。",
+    "examples": ["topics = ['输入输出', '条件判断', '循环', '函数']\nfor topic in topics:\n    print('复习：', topic)"],
+    "common_mistakes": ["只看概念不写代码", "跳过基础直接做综合题"],
+    "exercises": ["列出自己的Python复习清单，并标注最薄弱的3项。"]
+  },
+  {
+    "id": "PY-024",
+    "chapter": "第13章 课程复习",
+    "title": "课堂实验报告写作要点",
+    "tags": ["实验报告", "实践项目", "文档", "反思"],
+    "content": "实验报告应包含实验目标、核心代码、运行结果、问题分析和改进思路。对于课程项目，还应说明如何使用知识点解决实际问题。",
+    "examples": ["print('实验目标：完成成绩判断器')\nprint('问题分析：input需要类型转换')"],
+    "common_mistakes": ["只贴代码不解释思路", "没有记录遇到的问题和解决方法"],
+    "exercises": ["为成绩判断小项目写一段实验目标和问题分析。"]
+  }
+]

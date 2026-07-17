@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PyLearnSpark A3 Voice Final - Open First</title>
+  <style>
+    body{font-family:Arial,"Microsoft YaHei",sans-serif;max-width:960px;margin:0 auto;padding:34px;line-height:1.8;background:#f7f8fc;color:#1f2937}
+    .card{background:#fff;border-radius:18px;padding:26px;margin:18px 0;box-shadow:0 10px 32px rgba(15,23,42,.08)}
+    h1{font-size:30px;margin:0 0 10px} h2{margin-top:0}.ok{color:#15803d;font-weight:700}.warn{color:#b45309;font-weight:700}code{background:#eef2ff;padding:2px 8px;border-radius:8px}.btn{display:inline-block;background:#2563eb;color:white;text-decoration:none;padding:10px 16px;border-radius:12px;margin:8px 8px 0 0}.muted{color:#6b7280}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>PyLearnSpark A3 Voice Final</h1>
+    <p class="ok">这是包含语音识别功能的完整比赛演示版。</p>
+    <p>正式使用请先双击 <code>START_SERVER_WINDOWS.bat</code>。不要在压缩包里打开，必须先解压。</p>
+  </div>
+  <div class="card">
+    <h2>零基础怎么开</h2>
+    <ol>
+      <li>右键压缩包，点“全部解压缩”。</li>
+      <li>进入解压后的文件夹。</li>
+      <li>双击 <code>START_SERVER_WINDOWS.bat</code>。</li>
+      <li>黑色窗口不要关。</li>
+      <li>浏览器打开 <code>http://127.0.0.1:8000/chat</code> 后就能聊天。</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h2>语音识别怎么开</h2>
+    <p>打开 <code>config_keys.env</code>，填写：</p>
+    <pre>XF_ASR_APP_ID=
+XF_ASR_API_KEY=
+XF_ASR_API_SECRET=</pre>
+    <p>保存后重启服务器。进入聊天页后点击麦克风按钮。</p>
+    <p class="warn">不填这三项时，网页能演示，但语音识别不会真正转文字。</p>
+  </div>
+  <div class="card">
+    <h2>先不启服务器也想看页面</h2>
+    <p><code>OPEN_DEMO_NO_SERVER.html</code> 只显示启动说明。项目不会在离线页面中模拟 Agent、画像或资源生成。</p>
+  </div>
+</body>
+</html>
