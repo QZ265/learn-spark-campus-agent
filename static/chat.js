@@ -4,6 +4,8 @@ const MODE_KEY = 'pylearn_answer_mode_v1';
 const SIDEBAR_COLLAPSED_KEY = 'pylearn_sidebar_collapsed_v1';
 const LATEST_STATE_KEY = 'pylearn_latest_learning_state_v1';
 const COURSE_KEY = 'pylearn_course_id_v1';
+const AGENT_DOMAIN_KEY = 'campus_agent_domain_v1';
+const DOMAIN_COURSES_KEY = 'campus_agent_courses_v1';
 
 let chatUserId = localStorage.getItem(USER_KEY);
 if(!chatUserId){
@@ -14,11 +16,22 @@ if(!chatUserId){
 let currentConversationId = null;
 let currentMode = localStorage.getItem(MODE_KEY) || 'flash';
 let currentCourseId = localStorage.getItem(COURSE_KEY) || 'programming_python';
+let currentAgentDomain = localStorage.getItem(AGENT_DOMAIN_KEY) || domainForCourseId(currentCourseId);
+let availableCourses = [];
+const initialParams = new URLSearchParams(window.location.search);
+const initialCourse = initialParams.get('course');
+if(initialCourse){
+  currentCourseId = initialCourse;
+  currentAgentDomain = domainForCourseId(initialCourse);
+  localStorage.setItem(COURSE_KEY, currentCourseId);
+  localStorage.setItem(AGENT_DOMAIN_KEY, currentAgentDomain);
+}
 if(currentMode === 'agent') currentMode = 'flash';
 let healthState = null;
 let lastQuestion = '';
 let isSending = false;
 let promptPage = 0;
+let activeTool = null;
 let voiceState = {
   recording: false,
   recognizing: false,
@@ -47,14 +60,14 @@ const QUICK_PROMPTS = [
 ];
 
 const COURSE_PROMPTS = {
-  math_probability_statistics: [
+  math: [
     {label:'随机变量', prompt:'随机变量是什么？请给出严格定义和一个简单例子。'},
     {label:'正态分布', prompt:'正态分布随机变量如何标准化？请结合当前教材回答。'},
     {label:'条件概率', prompt:'条件概率和独立事件有什么区别？'},
     {label:'期望方差', prompt:'数学期望和方差分别描述什么？'},
     {label:'练习题', prompt:'根据当前课程资料给我出一道概率论基础题。'}
   ],
-  politics_maogai: [
+  politics: [
     {label:'总路线', prompt:'新民主主义革命总路线的内容是什么？请依据当前课程资料回答。'},
     {label:'核心概念', prompt:'请解释当前章节最重要的三个概念。'},
     {label:'材料题', prompt:'根据当前课程资料给我一道材料分析题。'},
@@ -63,7 +76,51 @@ const COURSE_PROMPTS = {
   ]
 };
 
+const AGENT_CONFIG = {
+  programming: {
+    name:'Python 编程助手', mark:'</>',
+    welcome:'我会优先依据 Python 课程知识空间回答，并在代码问题中给出可运行、可检查的示例。',
+    starter:'可以直接粘贴代码、报错信息，或问一个具体概念。'
+  },
+  math: {
+    name:'数学学习助手', mark:'f(x)',
+    welcome:'我会区分严格定义、推导过程和直观解释，并优先引用当前数学课程资料。',
+    starter:'可以问定义、公式推导，也可以让我根据教材出一道分层练习。'
+  },
+  politics: {
+    name:'思政学习助手', mark:'书',
+    welcome:'我会基于当前思政课程资料梳理概念、材料依据与论述结构。',
+    starter:'可以问教材概念、材料分析题或章节复习脉络。'
+  }
+};
+
+const TOOL_CONFIG = {
+  explanation:{label:'生成讲解文档', type:'explanation', instruction:'围绕下列学习需求生成个性化讲解文档：'},
+  mindmap:{label:'生成思维导图', type:'mindmap', instruction:'围绕下列学习需求生成知识点思维导图：'},
+  quiz:{label:'生成练习题', type:'quiz', instruction:'围绕下列学习需求生成分层练习题：'},
+  code_case:{label:'生成代码案例', type:'code_case', instruction:'围绕下列学习需求生成可运行代码案例：'},
+  further_reading:{label:'生成拓展阅读', type:'further_reading', instruction:'围绕下列学习需求生成有真实来源的拓展阅读：'},
+  resource_pack:{label:'生成完整资源包', type:null, instruction:'围绕下列学习需求生成完整学习资源包：'}
+};
+
 const $ = (selector) => document.querySelector(selector);
+
+function domainForCourseId(courseId){
+  if(String(courseId).startsWith('math_')) return 'math';
+  if(String(courseId).startsWith('politics_')) return 'politics';
+  return 'programming';
+}
+
+function readDomainCourses(){
+  try{return JSON.parse(localStorage.getItem(DOMAIN_COURSES_KEY) || '{}');}
+  catch(error){return {};}
+}
+
+function rememberDomainCourse(domain, courseId){
+  const values = readDomainCourses();
+  values[domain] = courseId;
+  localStorage.setItem(DOMAIN_COURSES_KEY, JSON.stringify(values));
+}
 
 function escapeHtml(value){
   return String(value || '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
@@ -119,7 +176,9 @@ function ensureConversation(firstMessage){
     messages: [],
     profile: null,
     plan: null,
-    knowledge: null
+    knowledge: null,
+    courseId: currentCourseId,
+    agentDomain: currentAgentDomain
   };
   currentConversationId = conversation.id;
   upsertConversation(conversation);
@@ -159,6 +218,8 @@ function saveMessage(role, text, extra = {}){
   if(extra.plan) conversation.plan = extra.plan;
   if(extra.knowledge) conversation.knowledge = extra.knowledge;
   conversation.updatedAt = Date.now();
+  conversation.courseId = currentCourseId;
+  conversation.agentDomain = currentAgentDomain;
   if(role === 'user' && conversation.messages.filter(m => m.role === 'user').length === 1){
     conversation.title = text.replace(/\s+/g, ' ').slice(0, 24) || '新对话';
   }
@@ -175,12 +236,17 @@ function requestHistory(){
 }
 
 function welcomeHtml(){
+  const config = AGENT_CONFIG[currentAgentDomain] || {
+    name:$('#courseSelect')?.selectedOptions?.[0]?.textContent || '课程学习助手', mark:'AI',
+    welcome:'我会在当前课程知识空间中检索并回答。', starter:'请告诉我你正在解决的具体学习问题。'
+  };
   return `
     <article class="message assistant">
-      <div class="avatar">AI</div>
+      <div class="avatar">${escapeHtml(config.mark)}</div>
       <div class="bubble">
-        <strong>你好，我是你的课程学习助手。</strong>
-        <p>直接告诉我你正在学习什么，或者把遇到的问题发给我。</p>
+        <strong>你好，我是${escapeHtml(config.name)}。</strong>
+        <p>${escapeHtml(config.welcome)}</p>
+        <p>${escapeHtml(config.starter)}</p>
       </div>
     </article>
   `;
@@ -197,6 +263,7 @@ function renderHistoryList(){
   if(!list.length){
     el.classList.add('empty');
     el.textContent = '暂无历史。';
+    renderAgentRecentUse(list);
     return;
   }
   el.classList.remove('empty');
@@ -213,12 +280,20 @@ function renderHistoryList(){
   el.querySelectorAll('.history-item').forEach(button => {
     button.addEventListener('click', () => loadConversation(button.dataset.id));
   });
+  renderAgentRecentUse(list);
+}
+
+function renderAgentRecentUse(list = readHistory()){
+  document.querySelectorAll('[data-agent-recent]').forEach(element => {
+    const conversation = list.find(item => (item.agentDomain || domainForCourseId(item.courseId)) === element.dataset.agentRecent);
+    element.textContent = conversation ? `最近 ${new Date(conversation.updatedAt).toLocaleDateString('zh-CN')}` : '暂无使用记录';
+  });
 }
 
 function renderQuickPrompts(){
   const wrap = $('#quickPrompts');
   if(!wrap) return;
-  const promptSource = COURSE_PROMPTS[currentCourseId] || QUICK_PROMPTS;
+  const promptSource = COURSE_PROMPTS[currentAgentDomain] || QUICK_PROMPTS;
   const pageSize = 5;
   const start = (promptPage * pageSize) % promptSource.length;
   const items = Array.from({length: Math.min(pageSize, promptSource.length)}).map((_, index) => promptSource[(start + index) % promptSource.length]);
@@ -237,6 +312,15 @@ function renderQuickPrompts(){
 function loadConversation(id){
   const conversation = getConversation(id);
   if(!conversation) return;
+  if(conversation.courseId && conversation.courseId !== currentCourseId){
+    currentCourseId = conversation.courseId;
+    currentAgentDomain = conversation.agentDomain || domainForCourseId(currentCourseId);
+    localStorage.setItem(COURSE_KEY, currentCourseId);
+    localStorage.setItem(AGENT_DOMAIN_KEY, currentAgentDomain);
+    renderCourseOptions(currentCourseId);
+    syncActiveAgent();
+    renderQuickPrompts();
+  }
   currentConversationId = id;
   const messages = $('#chatMessages');
   messages.innerHTML = welcomeHtml();
@@ -263,7 +347,9 @@ function applySidebarCollapsed(){
   const collapsed = localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === 'true';
   $('#chatApp').classList.toggle('sidebar-collapsed', collapsed);
   $('#sidebarToggle').textContent = collapsed ? '›' : '‹';
-  $('#sidebarToggle').title = collapsed ? '展开侧栏' : '收起侧栏';
+  const label = collapsed ? '展开 Agent 侧栏' : '收起 Agent 侧栏';
+  $('#sidebarToggle').title = label;
+  $('#sidebarToggle').setAttribute('aria-label', label);
 }
 
 function setMode(mode){
@@ -297,27 +383,30 @@ function setSendButton(busy){
 }
 
 function syncActiveAgent(){
-  const options = Array.from(document.querySelectorAll('.agent-option[data-course]'));
-  const active = options.find(option => option.dataset.course === currentCourseId);
+  const options = Array.from(document.querySelectorAll('.agent-option[data-domain]'));
+  const active = options.find(option => option.dataset.domain === currentAgentDomain);
   options.forEach(option => option.classList.toggle('active', option === active));
-  const fallbackName = $('#courseSelect')?.selectedOptions?.[0]?.textContent || '课程学习 Agent';
-  const name = active?.dataset.agentName || `${fallbackName} Agent`;
-  const mark = active?.querySelector('.agent-avatar')?.textContent || 'AI';
+  const fallbackName = $('#courseSelect')?.selectedOptions?.[0]?.textContent || '课程学习助手';
+  const config = AGENT_CONFIG[currentAgentDomain];
+  const name = config?.name || active?.dataset.agentName || `${fallbackName}助手`;
+  const mark = config?.mark || active?.querySelector('.agent-avatar')?.textContent || 'AI';
   if($('#activeAgentName')) $('#activeAgentName').textContent = name;
   if(document.querySelector('.active-agent-mark')) document.querySelector('.active-agent-mark').textContent = mark;
 }
 
-function selectAgentCourse(courseId){
-  const select = $('#courseSelect');
-  if(!select || !Array.from(select.options).some(option => option.value === courseId)) return;
-  currentCourseId = courseId;
-  select.value = courseId;
+function selectAgentDomain(domain){
+  if(!AGENT_CONFIG[domain]) return;
+  currentAgentDomain = domain;
+  localStorage.setItem(AGENT_DOMAIN_KEY, currentAgentDomain);
+  const remembered = readDomainCourses()[domain] || '';
+  renderCourseOptions(remembered);
   localStorage.setItem(COURSE_KEY, currentCourseId);
   currentConversationId = null;
   promptPage = 0;
   resetChatView();
   renderQuickPrompts();
   syncActiveAgent();
+  updateKnowledgeStatus();
 }
 
 function setVoiceStatus(text, type = ''){
@@ -596,6 +685,39 @@ async function loadHealth(){
     healthState = null;
   }
   updateModeUI();
+  updateKnowledgeStatus();
+}
+
+function updateKnowledgeStatus(){
+  const element = $('#knowledgeSpaceStatus');
+  if(!element) return;
+  if(currentCourseId === 'general'){
+    element.textContent = '通用学习空间：未绑定特定课程知识库';
+    element.className = 'knowledge-space-status general';
+    return;
+  }
+  const rag = healthState?.lightrag || {};
+  if(rag.available){
+    element.textContent = `知识库：当前课程独立 workspace · ${rag.embedding_model || '真实 Embedding'}`;
+    element.className = 'knowledge-space-status available';
+  }else{
+    element.textContent = '知识库：LightRAG 当前不可用，回答会明确标记 fallback';
+    element.className = 'knowledge-space-status unavailable';
+  }
+}
+
+function renderCourseOptions(preferredCourseId = currentCourseId){
+  const select = $('#courseSelect');
+  if(!select) return;
+  const domainCourses = availableCourses.filter(item => item.is_public && item.domain === currentAgentDomain);
+  select.innerHTML = '<option value="general">通用学习空间（不限定课程）</option>' + domainCourses.map(item =>
+    `<option value="${escapeHtml(item.course_id)}">${escapeHtml(item.name)}</option>`
+  ).join('');
+  const allowed = preferredCourseId === 'general' || domainCourses.some(item => item.course_id === preferredCourseId);
+  currentCourseId = allowed ? preferredCourseId : (domainCourses[0]?.course_id || 'general');
+  select.value = currentCourseId;
+  localStorage.setItem(COURSE_KEY, currentCourseId);
+  rememberDomainCourse(currentAgentDomain, currentCourseId);
 }
 
 async function loadCourses(){
@@ -604,30 +726,97 @@ async function loadCourses(){
   try{
     const response = await fetch(`/api/courses?user_id=${encodeURIComponent(chatUserId)}`);
     const data = await response.json();
-    const courses = Array.isArray(data.courses) ? data.courses : [];
-    select.innerHTML = courses.filter(item => item.is_public).map(item =>
-      `<option value="${escapeHtml(item.course_id)}">${escapeHtml(item.name)}</option>`
-    ).join('');
-    if(courses.some(item => item.course_id === currentCourseId && item.is_public)) select.value = currentCourseId;
-    else if(select.options.length) currentCourseId = select.value;
+    availableCourses = Array.isArray(data.courses) ? data.courses : [];
+    const selectedCourse = availableCourses.find(item => item.course_id === currentCourseId && item.is_public);
+    if(selectedCourse){
+      currentAgentDomain = selectedCourse.domain;
+      localStorage.setItem(AGENT_DOMAIN_KEY, currentAgentDomain);
+    }
+    renderCourseOptions(currentCourseId);
     syncActiveAgent();
+    resetChatView();
     renderQuickPrompts();
     select.addEventListener('change', () => {
       currentCourseId = select.value;
       localStorage.setItem(COURSE_KEY, currentCourseId);
+      rememberDomainCourse(currentAgentDomain, currentCourseId);
       resetChatView();
       currentConversationId = null;
       promptPage = 0;
       syncActiveAgent();
       renderQuickPrompts();
+      updateKnowledgeStatus();
     });
   }catch(e){
-    select.innerHTML = '<option value="programming_python">Python 程序设计</option>';
+    availableCourses = [{course_id:'programming_python', name:'Python 程序设计', domain:'programming', is_public:true}];
+    currentAgentDomain = 'programming';
+    renderCourseOptions(currentCourseId);
+    syncActiveAgent();
+    resetChatView();
+    renderQuickPrompts();
+  }
+}
+
+function setActiveTool(tool){
+  activeTool = TOOL_CONFIG[tool] ? tool : null;
+  const bar = $('#activeToolBar');
+  bar.hidden = !activeTool;
+  $('#activeToolName').textContent = activeTool ? `当前工具：${TOOL_CONFIG[activeTool].label}` : '';
+  $('#toolMenu').hidden = true;
+  $('#toolMenuButton').setAttribute('aria-expanded', 'false');
+  $('#chatInput').placeholder = activeTool ? `描述“${TOOL_CONFIG[activeTool].label}”的主题、目标或难点` : '输入问题，或使用语音和学习工具';
+  if(activeTool) $('#chatInput').focus();
+}
+
+function resourceCards(resources, requestedType){
+  const items = Array.isArray(resources) ? resources : [];
+  const visible = requestedType ? items.filter(item => item.type === requestedType) : items;
+  if(!visible.length) return '<p class="warn">资源服务没有返回所选类型，未使用模拟结果替代。</p>';
+  return `<div class="chat-resource-grid">${visible.map(item => `<a class="chat-resource-card" href="/resources/${encodeURIComponent(item.id)}"><span>${escapeHtml(item.type)}</span><strong>${escapeHtml(item.title)}</strong><small>审核 ${escapeHtml(item.review_status || '未返回')}</small></a>`).join('')}</div><a class="resource-center-link" href="/resources">前往资源中心查看全部已保存资源</a>`;
+}
+
+async function sendResourceRequest(message){
+  const tool = TOOL_CONFIG[activeTool];
+  if(!tool) return;
+  if(currentCourseId === 'general'){
+    addMessage('assistant', '<strong>生成学习资源需要可靠的课程来源。</strong><p>请先在“课程空间”中选择一门具体课程，再使用资源生成工具。</p>');
+    setActiveTool(null);
+    return;
+  }
+  isSending = true;
+  const original = message.trim();
+  lastQuestion = original;
+  ensureConversation(original);
+  setSendButton(true);
+  $('#chatInput').value = '';
+  addMessage('user', `<span class="message-tool-label">${escapeHtml(tool.label)}</span><p>${escapeHtml(original)}</p>`);
+  saveMessage('user', `[${tool.label}] ${original}`);
+  const working = addMessage('assistant', `<div class="answer-meta">真实资源生成</div><div class="thinking-line"><span>正在检索当前课程资料并生成资源</span></div><div class="typing-bar"><span></span><span></span><span></span></div>`);
+  try{
+    const response = await fetch('/api/resources/generate', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({user_id:chatUserId, request:`${tool.instruction}${original}`, course_id:currentCourseId})});
+    const data = await response.json().catch(() => ({}));
+    if(!response.ok) throw new Error(data.detail?.review?.issues?.join('；') || data.detail || `资源生成失败（${response.status}）`);
+    const cards = resourceCards(data.resources, tool.type);
+    working.querySelector('.bubble').innerHTML = `<div class="answer-meta">真实资源生成 · ${escapeHtml(data.review?.status || '审核状态未返回')}</div><p>${escapeHtml(tool.label)}已完成并保存。</p>${tool.type ? '<p class="resource-generation-note">当前后端会同时完成五类资源的审核与保存；这里优先展示你选择的类型。</p>' : ''}${cards}`;
+    const summary = `${tool.label}已完成。${(data.resources || []).map(item => `[${item.title}](/resources/${item.id})`).join('\n')}`;
+    saveMessage('assistant', summary, {mode:data.agent_mode || 'astron', review:data.review});
+    scrollToMessageTop(working);
+  }catch(error){
+    working.querySelector('.bubble').innerHTML = `<strong>资源没有生成成功。</strong><p>${escapeHtml(error.message || error)}</p><p>未创建模拟资源，也不会显示为已保存。</p>`;
+    scrollToMessageTop(working);
+  }finally{
+    isSending = false;
+    setSendButton(false);
+    setActiveTool(null);
   }
 }
 
 async function sendQuestion(message){
   if(isSending || !message.trim()) return;
+  if(activeTool){
+    await sendResourceRequest(message);
+    return;
+  }
   isSending = true;
   const useSpark = currentMode === 'spark';
   lastQuestion = message.trim();
@@ -705,6 +894,21 @@ $('#voiceButton').addEventListener('click', () => {
   }
 });
 
+$('#toolMenuButton').addEventListener('click', event => {
+  event.stopPropagation();
+  const menu = $('#toolMenu');
+  menu.hidden = !menu.hidden;
+  $('#toolMenuButton').setAttribute('aria-expanded', String(!menu.hidden));
+});
+document.querySelectorAll('[data-chat-tool]').forEach(button => button.addEventListener('click', () => setActiveTool(button.dataset.chatTool)));
+$('#clearToolButton').addEventListener('click', () => setActiveTool(null));
+document.addEventListener('click', event => {
+  if(!event.target.closest('.chat-tool-wrap')){
+    $('#toolMenu').hidden = true;
+    $('#toolMenuButton').setAttribute('aria-expanded', 'false');
+  }
+});
+
 $('#newChatBtn').addEventListener('click', () => {
   currentConversationId = null;
   lastQuestion = '';
@@ -732,8 +936,8 @@ document.querySelectorAll('.mode-option').forEach(button => {
 document.querySelectorAll('[data-direct-mode]').forEach(button => {
   button.addEventListener('click', () => setMode(button.dataset.directMode));
 });
-document.querySelectorAll('.agent-option[data-course]').forEach(button => {
-  button.addEventListener('click', () => selectAgentCourse(button.dataset.course));
+document.querySelectorAll('.agent-option[data-domain]').forEach(button => {
+  button.addEventListener('click', () => selectAgentDomain(button.dataset.domain));
 });
 document.addEventListener('keydown', (event) => {
   if(event.key === 'Escape' && !$('#modeModal').hidden) closeModeModal();
@@ -752,7 +956,7 @@ setInterval(() => {
   }
 }, 22000);
 
-const initialQuestion = new URLSearchParams(window.location.search).get('q');
+const initialQuestion = initialParams.get('q');
 if(initialQuestion && initialQuestion.trim()){
   $('#chatInput').value = initialQuestion.trim();
   window.history.replaceState({}, '', '/chat');

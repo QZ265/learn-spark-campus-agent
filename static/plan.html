@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>学习计划｜Campus Lumina</title>
+  <link rel="stylesheet" href="/static/styles.css?v=12" />
+</head>
+<body class="lumina-body plan-body">
+  <main class="lumina-stage">
+    <section class="lumina-shell two-column-shell">
+      <aside class="lumina-sidebar">
+        <a class="lumina-brand" href="/"><span class="lumina-brand-mark" aria-hidden="true"><i></i></span><span><strong>Campus Lumina</strong><small>校园智能学习中枢</small></span></a>
+        <nav class="lumina-nav" aria-label="主导航">
+          <a href="/"><span class="nav-symbol">⌂</span>Dashboard</a><a href="/chat"><span class="nav-symbol">✦</span>智能 Agent</a><a href="/profile"><span class="nav-symbol">◌</span>学生画像</a><a class="active" href="/plan"><span class="nav-symbol">▦</span>学习计划</a><a href="/resources"><span class="nav-symbol">▤</span>资源中心</a><a href="/settings"><span class="nav-symbol">⚙</span>账户设置</a>
+        </nav>
+        <div class="lumina-side-note"><span class="side-note-icon">▦</span><strong>计划同步</strong><p>当前计划保存在本机浏览器中，并同步显示到 Dashboard。</p></div>
+      </aside>
+
+      <section class="page-workspace">
+        <header class="page-topbar">
+          <div class="page-heading"><span>Learning Plan</span><h1>学习计划</h1><p>管理每周课表、作业、考试和复习提醒。</p></div>
+          <div class="page-actions"><button id="addClassButton" class="secondary-action" type="button">＋ 新增课程</button><button id="addTaskButton" class="primary-action" type="button">＋ 新增任务</button></div>
+        </header>
+
+        <main class="page-content plan-content">
+          <section class="content-panel schedule-panel">
+            <div class="panel-heading"><div><span>Weekly Schedule</span><h2>每周课表</h2></div><small>课程支持编辑、删除和每周重复</small></div>
+            <div id="scheduleGrid" class="schedule-grid"></div>
+          </section>
+
+          <section class="plan-lower-grid">
+            <div class="content-panel plan-calendar-panel">
+              <div class="panel-heading"><div><span>Calendar</span><h2 id="planCalendarTitle">月视图</h2></div><div class="calendar-controls"><button id="planCalendarPrev" type="button">‹</button><button id="planCalendarToday" type="button">今天</button><button id="planCalendarNext" type="button">›</button></div></div>
+              <div class="plan-calendar-week"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
+              <div id="planCalendarGrid" class="plan-calendar-grid"></div>
+            </div>
+            <div class="content-panel task-list-panel">
+              <div class="panel-heading"><div><span>Tasks & Deadlines</span><h2>任务列表</h2></div><select id="taskStatusFilter" aria-label="筛选任务状态"><option value="open">未完成</option><option value="all">全部</option><option value="done">已完成</option></select></div>
+              <div id="planTaskList" class="plan-task-list"></div>
+            </div>
+          </section>
+        </main>
+      </section>
+    </section>
+  </main>
+
+  <div id="classModal" class="campus-modal" hidden>
+    <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="classModalTitle">
+      <div class="modal-card-head"><div><span>Schedule</span><h2 id="classModalTitle">新增课程</h2></div><button type="button" data-close-modal="classModal">×</button></div>
+      <form id="classForm" class="form-grid"><input name="id" type="hidden" /><label class="wide">课程名称<input name="course" required maxlength="80" /></label><label>星期<select name="weekday" required><option value="1">星期一</option><option value="2">星期二</option><option value="3">星期三</option><option value="4">星期四</option><option value="5">星期五</option><option value="6">星期六</option><option value="7">星期日</option></select></label><label>课程 Agent<select name="agent"><option value="">不关联</option><option value="programming_python">Python 编程助手</option><option value="math_probability_statistics">数学学习助手</option><option value="politics_maogai">思政学习助手</option></select></label><label>开始时间<input name="start" type="time" required /></label><label>结束时间<input name="end" type="time" required /></label><label>地点<input name="location" maxlength="80" /></label><label>教师<input name="teacher" maxlength="80" /></label><label>颜色<select name="color"><option value="indigo">靛蓝</option><option value="teal">青绿</option><option value="orange">暖橙</option></select></label><label class="check-label"><input name="repeat" type="checkbox" checked /> 每周重复</label><div class="form-actions wide"><button type="button" class="text-action danger" id="deleteClassButton" hidden>删除课程</button><span></span><button type="button" class="secondary-action" data-close-modal="classModal">取消</button><button class="primary-action" type="submit">保存课程</button></div></form>
+    </section>
+  </div>
+
+  <div id="taskModal" class="campus-modal" hidden>
+    <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="taskModalTitle">
+      <div class="modal-card-head"><div><span>Task</span><h2 id="taskModalTitle">新增任务</h2></div><button type="button" data-close-modal="taskModal">×</button></div>
+      <form id="taskForm" class="form-grid"><input name="id" type="hidden" /><label class="wide">任务名称<input name="title" required maxlength="120" /></label><label>任务类型<select name="type"><option value="assignment">作业</option><option value="exam">考试</option><option value="deadline">Deadline</option><option value="review">复习任务</option><option value="reminder">自定义提醒</option></select></label><label>状态<select name="status"><option value="todo">待开始</option><option value="in_progress">进行中</option><option value="done">已完成</option></select></label><label>日期<input name="date" type="date" required /></label><label>时间<input name="time" type="time" /></label><label class="wide">关联课程<select id="taskCourseSelect" name="courseId"><option value="">不关联课程</option></select></label><label class="wide">说明<textarea name="notes" rows="3" maxlength="600"></textarea></label><label class="check-label wide"><input name="reminder" type="checkbox" checked /> 在 Dashboard 显示提醒</label><div class="form-actions wide"><button type="button" class="text-action danger" id="deleteTaskButton" hidden>删除任务</button><span></span><button type="button" class="secondary-action" data-close-modal="taskModal">取消</button><button class="primary-action" type="submit">保存任务</button></div></form>
+    </section>
+  </div>
+
+  <script src="/static/campus.js?v=2"></script><script src="/static/plan.js?v=2"></script>
+</body>
+</html>

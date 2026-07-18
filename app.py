@@ -17,7 +17,7 @@ import requests
 from dotenv import load_dotenv
 from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -66,7 +66,7 @@ XF_ASR_LANGUAGE = os.getenv("XF_ASR_LANGUAGE", "zh_cn").strip() or "zh_cn"
 XF_ASR_ACCENT = os.getenv("XF_ASR_ACCENT", "mandarin").strip() or "mandarin"
 XF_ASR_TIMEOUT_SECONDS = int(os.getenv("XF_ASR_TIMEOUT_SECONDS", "35"))
 
-app = FastAPI(title="PyLearnSpark A3 多智能体系统", version="2.0.0")
+app = FastAPI(title="Campus Lumina 校园智能学习平台", version="2.0.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -857,6 +857,21 @@ def profile_page():
     return FileResponse(BASE_DIR / "static" / "profile.html", headers={"Cache-Control": "no-store"})
 
 
+@app.get("/plan")
+def plan_page():
+    return FileResponse(BASE_DIR / "static" / "plan.html", headers={"Cache-Control": "no-store"})
+
+
+@app.get("/resources")
+def resources_page():
+    return FileResponse(BASE_DIR / "static" / "resources.html", headers={"Cache-Control": "no-store"})
+
+
+@app.get("/settings")
+def settings_page():
+    return FileResponse(BASE_DIR / "static" / "settings.html", headers={"Cache-Control": "no-store"})
+
+
 @app.get("/assistants")
 def assistants_page():
     return FileResponse(BASE_DIR / "static" / "assistants.html", headers={"Cache-Control": "no-store"})
@@ -869,7 +884,7 @@ def resource_page(resource_id: str):
 
 @app.get("/entry")
 def entry_page():
-    return FileResponse(BASE_DIR / "PROJECT_ENTRY.html")
+    return RedirectResponse(url="/", status_code=307)
 
 
 @app.get("/api/health")

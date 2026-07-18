@@ -4,55 +4,34 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>智能 Agent｜Campus Lumina</title>
-  <link rel="stylesheet" href="/static/styles.css?v=9" />
+  <link rel="stylesheet" href="/static/styles.css?v=12" />
 </head>
 <body class="lumina-body agent-body">
   <main class="lumina-stage">
     <section id="chatApp" class="lumina-shell agent-layout chat-app">
-      <aside class="lumina-sidebar agent-global-sidebar">
-        <a class="lumina-brand" href="/" aria-label="返回 Dashboard">
-          <span class="lumina-brand-mark">CL</span>
-          <span><strong>Campus Lumina</strong><small>校园智能学习中枢</small></span>
-        </a>
-        <nav class="lumina-nav" aria-label="主导航">
-          <a href="/"><span class="nav-symbol">⌂</span>Dashboard</a>
-          <a class="active" href="/chat"><span class="nav-symbol">✦</span>智能 Agent</a>
-          <a href="/profile"><span class="nav-symbol">◌</span>学生画像</a>
-          <a href="/chat?q=请根据我当前的学习情况生成一套个性化学习资源。"><span class="nav-symbol">▤</span>资源生成</a>
-          <a href="/chat?q=请根据我最近的练习记录评估学习效果。"><span class="nav-symbol">☷</span>学业评估</a>
-          <a href="/assistants"><span class="nav-symbol">⚙</span>账户设置</a>
-        </nav>
-        <div class="agent-service-state">
-          <span></span>
-          <div><strong>课程服务已连接</strong><small>检索、画像与审核按需运行</small></div>
-        </div>
-      </aside>
-
       <section class="agent-workspace">
         <aside class="chat-sidebar agent-rail">
-          <div class="sidebar-top">
-            <div class="agent-rail-title">
-              <span>Workspace</span>
-              <h2>学习 Agents</h2>
-            </div>
-            <button id="sidebarToggle" class="icon-btn" type="button" title="收起侧栏">‹</button>
+          <div class="agent-rail-controls">
+            <a class="agent-home-button" href="/" title="返回 Dashboard" aria-label="返回 Dashboard"><span class="lumina-brand-mark" aria-hidden="true"><i></i></span></a>
+            <button id="sidebarToggle" class="icon-btn" type="button" title="收起 Agent 侧栏" aria-label="收起 Agent 侧栏">‹</button>
+          </div>
+          <div class="agent-rail-title">
+            <span>Learning workspace</span>
+            <h2>学习 Agents</h2>
           </div>
 
           <div class="agent-options" aria-label="选择学习 Agent">
-            <button class="agent-option active" data-course="programming_python" data-agent-name="Python 编程 Agent" type="button">
-              <span class="agent-avatar python">Py</span><span><strong>Python 编程</strong><small>代码、实验与项目</small></span>
+            <button class="agent-option active" data-domain="programming" data-agent-name="Python 编程助手" type="button">
+              <span class="agent-avatar python" aria-hidden="true">&lt;/&gt;</span><span><strong>Python 编程助手</strong><small>教材检索、代码调试与实操</small><em data-agent-recent="programming">暂无使用记录</em></span>
             </button>
-            <button class="agent-option" data-course="math_probability_statistics" data-agent-name="数学学习 Agent" type="button">
-              <span class="agent-avatar math">Σ</span><span><strong>数学学习</strong><small>公式、证明与练习</small></span>
+            <button class="agent-option" data-domain="math" data-agent-name="数学学习助手" type="button">
+              <span class="agent-avatar math" aria-hidden="true">f(x)</span><span><strong>数学学习助手</strong><small>定义推导、公式与分层练习</small><em data-agent-recent="math">暂无使用记录</em></span>
             </button>
-            <button class="agent-option" data-course="politics_maogai" data-agent-name="思政问答 Agent" type="button">
-              <span class="agent-avatar politics">政</span><span><strong>思政问答</strong><small>概念、材料与论述</small></span>
-            </button>
-            <button class="agent-option disabled" type="button" disabled title="英语课程知识库尚未接入">
-              <span class="agent-avatar english">En</span><span><strong>英语写作</strong><small>课程知识库待接入</small></span>
+            <button class="agent-option" data-domain="politics" data-agent-name="思政学习助手" type="button">
+              <span class="agent-avatar politics" aria-hidden="true">书</span><span><strong>思政学习助手</strong><small>教材依据、材料分析与论述</small><em data-agent-recent="politics">暂无使用记录</em></span>
             </button>
             <a class="agent-option custom" href="/assistants">
-              <span class="agent-avatar custom">＋</span><span><strong>自建 Agent</strong><small>上传资料创建课程助手</small></span>
+              <span class="agent-avatar custom" aria-hidden="true">＋</span><span><strong>创建课程助手</strong><small>上传资料建立独立知识空间</small></span>
             </a>
           </div>
 
@@ -67,11 +46,13 @@
         <main class="chat-main agent-chat-main">
           <header class="chat-header agent-chat-header">
             <div class="agent-heading">
-              <div class="active-agent-mark">Py</div>
+              <a class="agent-mobile-home" href="/" title="返回 Dashboard" aria-label="返回 Dashboard"><span class="lumina-brand-mark" aria-hidden="true"><i></i></span></a>
+              <div class="active-agent-mark">&lt;/&gt;</div>
               <div>
                 <span>当前课程 Agent</span>
-                <h1 id="activeAgentName">Python 编程 Agent</h1>
+                <h1 id="activeAgentName">Python 编程助手</h1>
                 <label class="course-picker">课程空间 <select id="courseSelect" aria-label="选择当前课程"></select></label>
+                <small id="knowledgeSpaceStatus" class="knowledge-space-status">正在读取知识库状态</small>
               </div>
             </div>
             <div class="agent-header-tools">
@@ -89,15 +70,7 @@
             </div>
           </header>
 
-          <section id="chatMessages" class="chat-messages" aria-live="polite">
-            <article class="message assistant">
-              <div class="avatar">AI</div>
-              <div class="bubble">
-                <strong>你好，我是你的课程学习助手。</strong>
-                <p>直接告诉我你正在学习什么，或者把遇到的问题发给我。</p>
-              </div>
-            </article>
-          </section>
+          <section id="chatMessages" class="chat-messages" aria-live="polite"></section>
 
           <section id="quickPrompts" class="quick-prompts" aria-label="推荐问题">
             <button data-prompt="Python变量是什么？请直接回答。">变量入门</button>
@@ -107,7 +80,20 @@
           </section>
 
           <form id="chatForm" class="chat-composer">
+            <div id="activeToolBar" class="active-tool-bar" hidden><span id="activeToolName"></span><button id="clearToolButton" type="button" aria-label="取消当前工具">×</button></div>
             <div class="input-shell">
+              <div class="chat-tool-wrap">
+                <button id="toolMenuButton" class="chat-tool-button" type="button" title="学习工具" aria-label="打开学习工具" aria-expanded="false">＋</button>
+                <div id="toolMenu" class="chat-tool-menu" hidden>
+                  <a href="/assistants?action=upload"><strong>上传资料</strong><small>创建或补充课程知识空间</small></a>
+                  <button data-chat-tool="explanation" type="button"><strong>生成讲解文档</strong><small>目标、解释、示例与引用</small></button>
+                  <button data-chat-tool="mindmap" type="button"><strong>生成思维导图</strong><small>生成并保存 Mermaid 图</small></button>
+                  <button data-chat-tool="quiz" type="button"><strong>生成练习题</strong><small>题目、答案、解析与难度</small></button>
+                  <button data-chat-tool="code_case" type="button"><strong>生成代码案例</strong><small>任务、测试与参考答案</small></button>
+                  <button data-chat-tool="further_reading" type="button"><strong>生成拓展阅读</strong><small>只采用可追溯真实来源</small></button>
+                  <button data-chat-tool="resource_pack" type="button"><strong>生成完整资源包</strong><small>生成后进入资源中心管理</small></button>
+                </div>
+              </div>
               <button id="voiceButton" class="voice-btn" type="button" title="语音输入" aria-label="语音输入">
                 <svg class="voice-icon" viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z"></path>
@@ -115,7 +101,7 @@
                   <path d="M12 18v3"></path><path d="M8 21h8"></path>
                 </svg>
               </button>
-              <textarea id="chatInput" rows="2" placeholder="输入问题，或点击麦克风语音提问"></textarea>
+              <textarea id="chatInput" rows="2" placeholder="输入问题，或使用语音和学习工具"></textarea>
             </div>
             <button id="chatSend" class="lumina-send-btn" type="submit" title="发送问题"><span>发送</span><b>↑</b></button>
             <div id="voiceStatus" class="voice-status" aria-live="polite"></div>
@@ -138,6 +124,7 @@
     </section>
   </main>
 
-  <script src="/static/chat.js?v=9"></script>
+  <script src="/static/campus.js?v=2"></script>
+  <script src="/static/chat.js?v=11"></script>
 </body>
 </html>

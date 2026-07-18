@@ -4,101 +4,63 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>学生画像｜Campus Lumina</title>
-  <link rel="stylesheet" href="/static/styles.css?v=9" />
+  <link rel="stylesheet" href="/static/styles.css?v=12" />
 </head>
 <body class="lumina-body profile-body">
   <main class="lumina-stage">
     <section class="lumina-shell profile-shell">
       <aside class="lumina-sidebar">
-        <a class="lumina-brand" href="/" aria-label="返回 Dashboard">
-          <span class="lumina-brand-mark">CL</span>
-          <span><strong>Campus Lumina</strong><small>校园智能学习中枢</small></span>
-        </a>
+        <a class="lumina-brand" href="/" aria-label="返回 Dashboard"><span class="lumina-brand-mark" aria-hidden="true"><i></i></span><span><strong>Campus Lumina</strong><small>校园智能学习中枢</small></span></a>
         <nav class="lumina-nav" aria-label="主导航">
-          <a href="/"><span class="nav-symbol">⌂</span>Dashboard</a>
-          <a href="/chat"><span class="nav-symbol">✦</span>智能 Agent</a>
-          <a class="active" href="/profile"><span class="nav-symbol">◌</span>学生画像</a>
-          <a href="/chat?q=请根据我当前的学习情况生成一套个性化学习资源。"><span class="nav-symbol">▤</span>资源生成</a>
-          <a href="/chat?q=请根据我最近的练习记录评估学习效果。"><span class="nav-symbol">☷</span>学业评估</a>
-          <a href="/assistants"><span class="nav-symbol">⚙</span>账户设置</a>
+          <a href="/"><span class="nav-symbol">⌂</span>Dashboard</a><a href="/chat"><span class="nav-symbol">✦</span>智能 Agent</a><a class="active" href="/profile"><span class="nav-symbol">◌</span>学生画像</a><a href="/plan"><span class="nav-symbol">▦</span>学习计划</a><a href="/resources"><span class="nav-symbol">▤</span>资源中心</a><a href="/settings"><span class="nav-symbol">⚙</span>账户设置</a>
         </nav>
-        <div class="lumina-side-note profile-side-note">
-          <span class="side-note-icon">◌</span>
-          <strong>随学随新</strong>
-          <p>画像只采用对话、练习与学习行为中的直接证据。</p>
-          <a href="/chat">继续学习</a>
-        </div>
+        <div class="lumina-side-note profile-side-note"><span class="side-note-icon">◌</span><strong>随学随新</strong><p>画像只采用对话、练习与学习行为中的直接证据。</p><a href="/chat">继续学习</a></div>
       </aside>
 
       <section class="profile-workspace">
         <header class="lumina-topbar profile-lumina-topbar">
-          <div class="profile-page-title"><span>Dynamic Profile</span><h1>学生画像</h1></div>
-          <div class="profile-top-actions">
-            <label class="profile-course-picker">当前课程 <select id="profileCourseSelect" aria-label="选择画像课程"></select></label>
-            <a class="lumina-secondary-btn" href="/chat">返回 Agent</a>
-          </div>
+          <div class="profile-page-title"><span>Evidence-based Profile</span><h1>学生画像</h1></div>
+          <div class="profile-top-actions"><label class="profile-course-picker">课程专项画像 <select id="profileCourseSelect" aria-label="选择画像课程"></select></label><a class="lumina-secondary-btn" href="/settings">基本资料设置</a></div>
         </header>
 
         <main class="profile-dashboard">
           <section class="profile-overview-bar">
-            <div>
-              <span class="profile-overview-kicker">EVIDENCE-BASED</span>
-              <h2>基于真实学习记录逐步形成</h2>
-              <p>没有证据的字段会保持“尚未确认”，不会推测性格、能力或学习偏好。</p>
-            </div>
-            <div id="profileSummary" class="profile-summary">
-              <strong>等待画像生成</strong>
-              <span>先在智能 Agent 页面完成一次学习对话。</span>
-            </div>
+            <div><span class="profile-overview-kicker">DYNAMIC & TRACEABLE</span><h2>从真实学习证据中逐步形成</h2><p>未确认的信息保持空缺；你可以修正画像，用户修正会作为最高优先级证据保存。</p></div>
+            <div id="profileSummary" class="profile-summary"><strong>正在读取画像</strong><span>请稍候</span></div>
+          </section>
+
+          <section class="profile-section-grid">
+            <article class="profile-panel">
+              <div class="lumina-section-head compact"><div><span>Global Profile</span><h2>全局画像</h2><p>身份信息来自账户设置，学习信息来自有证据的画像记录。</p></div></div>
+              <div id="globalProfileGrid" class="profile-fact-grid"></div>
+            </article>
+            <article class="profile-panel">
+              <div class="lumina-section-head compact"><div><span>Course Profile</span><h2>课程专项画像</h2><p>当前课程内的掌握情况、错误与学习状态。</p></div></div>
+              <div id="courseProfileGrid" class="profile-fact-grid"></div>
+            </article>
           </section>
 
           <section class="profile-primary-grid">
-            <div class="profile-panel profile-dimensions-panel">
-              <div class="lumina-section-head compact"><div><span>Profile Dimensions</span><h2>画像维度</h2></div></div>
-              <div id="profileDimensions" class="profile-dimension-grid">
-                <article class="profile-dimension-card"><span>01</span><div><strong>知识基础</strong><p>等待学习记录</p></div></article>
-                <article class="profile-dimension-card"><span>02</span><div><strong>学习目标</strong><p>尚未确认</p></div></article>
-                <article class="profile-dimension-card"><span>03</span><div><strong>认知风格</strong><p>尚未确认</p></div></article>
-                <article class="profile-dimension-card"><span>04</span><div><strong>易错点</strong><p>等待练习记录</p></div></article>
-                <article class="profile-dimension-card"><span>05</span><div><strong>资源偏好</strong><p>尚未确认</p></div></article>
-                <article class="profile-dimension-card"><span>06</span><div><strong>学习记录</strong><p>等待学习记录</p></div></article>
-              </div>
-            </div>
-
+            <section class="profile-panel profile-record-section">
+              <div class="lumina-section-head"><div><span>Evidence Records</span><h2>画像证据</h2><p>每条结论都展示证据、来源、置信度、更新时间与确认状态。</p></div></div>
+              <div id="profileRecords" class="profile-record-grid"></div>
+            </section>
             <aside class="profile-insight-column">
-              <section class="profile-panel radar-panel">
-                <div class="lumina-section-head compact"><div><span>Visual Summary</span><h2>画像摘要</h2></div></div>
-                <div class="qualitative-radar" aria-label="定性学生画像视觉摘要">
-                  <div class="radar-ring ring-one"></div><div class="radar-ring ring-two"></div><div class="radar-fill"></div>
-                  <strong>动态<br />画像</strong>
-                  <span class="radar-point point-foundation">知识基础</span>
-                  <span class="radar-point point-goal">学习目标</span>
-                  <span class="radar-point point-style">认知风格</span>
-                  <span class="radar-point point-error">易错点</span>
-                  <span class="radar-point point-resource">资源偏好</span>
-                  <span class="radar-point point-record">学习记录</span>
-                </div>
-                <p class="radar-caption">这是定性视觉摘要，不代表精确能力分数。</p>
+              <section id="profileVisualPanel" class="profile-panel radar-panel" hidden>
+                <div class="lumina-section-head compact"><div><span>Qualitative Summary</span><h2>画像视觉摘要</h2></div></div>
+                <div class="qualitative-radar" aria-label="定性学生画像视觉摘要"><div class="radar-ring ring-one"></div><div class="radar-ring ring-two"></div><div class="radar-fill"></div><strong>已确认<br />画像</strong><span class="radar-point point-foundation">知识基础</span><span class="radar-point point-goal">学习目标</span><span class="radar-point point-style">学习偏好</span><span class="radar-point point-error">易错点</span><span class="radar-point point-resource">学习状态</span><span class="radar-point point-record">学习记录</span></div>
+                <p class="radar-caption">仅在有足够证据时显示，不代表精确能力分数。</p>
               </section>
-
+              <section id="profileVisualEmpty" class="profile-panel profile-visual-empty"><strong>暂不生成视觉摘要</strong><p>当前有效证据不足。继续对话或完成练习后，画像会逐步丰富。</p></section>
               <section class="profile-panel strategy-panel">
-                <div class="lumina-section-head compact"><div><span>Next Actions</span><h2>推荐动作</h2></div></div>
-                <div class="strategy-list">
-                  <div><span class="strategy-icon indigo">答</span><p><strong>回答策略</strong><small id="answerStrategy">先直接回答，再按需要补充例子与引用。</small></p></div>
-                  <div><span class="strategy-icon teal">资</span><p><strong>资源策略</strong><small id="resourceStrategy">信息不足时不推测资源偏好。</small></p></div>
-                  <div><span class="strategy-icon orange">续</span><p><strong>上下文策略</strong><small id="contextStrategy">保留当前课程内最近对话上下文。</small></p></div>
-                </div>
+                <div class="lumina-section-head compact"><div><span>Response Strategy</span><h2>推荐动作</h2></div></div>
+                <div class="strategy-list"><div><span class="strategy-icon indigo">答</span><p><strong>回答策略</strong><small id="answerStrategy">简单问题先直接回答。</small></p></div><div><span class="strategy-icon teal">资</span><p><strong>资源策略</strong><small id="resourceStrategy">信息不足时不推测资源偏好。</small></p></div><div><span class="strategy-icon orange">续</span><p><strong>上下文策略</strong><small id="contextStrategy">限定在当前课程上下文。</small></p></div></div>
               </section>
             </aside>
           </section>
 
-          <section class="profile-panel profile-record-section">
-            <div class="lumina-section-head"><div><span>Evidence Records</span><h2>画像证据</h2><p>展开查看字段值、原始证据、来源、置信度与更新时间。</p></div></div>
-            <div id="profileRecords" class="profile-record-grid"></div>
-          </section>
-
           <section class="profile-secondary-grid">
-            <div class="profile-panel"><div class="lumina-section-head compact"><div><span>Recent Changes</span><h2>最近变化</h2></div></div><div id="profileChanges" class="profile-timeline"></div></div>
+            <div class="profile-panel"><div class="lumina-section-head compact"><div><span>Recent Changes</span><h2>最近画像变化</h2></div></div><div id="profileChanges" class="profile-timeline"></div></div>
             <div class="profile-panel"><div class="lumina-section-head compact"><div><span>Missing Evidence</span><h2>信息不足项</h2></div></div><div id="profileMissing" class="missing-grid"></div></div>
           </section>
         </main>
@@ -106,6 +68,14 @@
     </section>
   </main>
 
-  <script src="/static/profile.js?v=9"></script>
+  <div id="profileEditModal" class="campus-modal" hidden>
+    <section class="modal-card profile-edit-card" role="dialog" aria-modal="true" aria-labelledby="profileEditTitle">
+      <div class="modal-card-head"><div><span>User correction</span><h2 id="profileEditTitle">修正画像</h2></div><button id="profileEditClose" type="button" aria-label="关闭">×</button></div>
+      <form id="profileEditForm" class="form-grid"><input name="field" type="hidden" /><label class="wide">当前结论<textarea name="value" required rows="3"></textarea></label><label class="wide">修正依据<textarea name="evidence" required rows="3" placeholder="请说明真实情况，例如：我每天晚上只能学习半小时。"></textarea></label><p class="profile-edit-note wide">修正会保存为“用户修正”证据，不会覆盖安全规则或课程隔离。</p><div class="form-actions wide"><span></span><button id="profileEditCancel" class="secondary-action" type="button">取消</button><button class="primary-action" type="submit">保存修正</button></div></form>
+    </section>
+  </div>
+
+  <script src="/static/campus.js?v=2"></script>
+  <script src="/static/profile.js?v=11"></script>
 </body>
 </html>

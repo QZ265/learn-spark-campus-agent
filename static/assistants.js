@@ -17,7 +17,8 @@ async function loadInitial(){
   const rag = health.lightrag || {};
   $('#ragStatus').textContent = rag.available ? `可用 · ${rag.embedding_model}` : 'LightRAG 未安装';
   $('#ragStatus').className = `review-badge ${rag.available ? 'passed' : 'rejected'}`;
-  $('#publicCourses').innerHTML = courses.courses.filter(item => item.is_public).map(item => `<div class="assistant-item"><strong>${esc(item.name)}</strong><span>${esc(item.domain)} · ${esc(item.workspace)}</span><a href="/chat">进入答疑</a></div>`).join('');
+  const publicCourses = courses.courses.filter(item => item.is_public);
+  $('#publicCourses').innerHTML = publicCourses.length ? publicCourses.map(item => `<div class="assistant-item"><strong>${esc(item.name)}</strong><span>${esc(item.domain)} · 独立课程空间</span><a href="/chat?course=${encodeURIComponent(item.course_id)}">进入答疑</a></div>`).join('') : '<div class="content-empty"><strong>暂无可用课程</strong><p>没有使用静态课程数据替代。</p></div>';
 }
 
 $('#assistantForm').addEventListener('submit', async event => {
@@ -80,4 +81,12 @@ $('#assistantQueryForm').addEventListener('submit', async event => {
   }catch(error){ $('#assistantAnswer').textContent = error.message; }
 });
 
-loadInitial().catch(error => { $('#ragStatus').textContent = error.message; });
+loadInitial().catch(error => { $('#ragStatus').textContent = error.message; $('#publicCourses').innerHTML = '<div class="content-error"><strong>课程读取失败</strong><p>请确认本地服务已启动。</p></div>'; });
+
+const requestedAction = new URLSearchParams(location.search).get('action');
+if(requestedAction === 'create' || requestedAction === 'upload'){
+  requestAnimationFrame(() => {
+    $('#createAssistantSection').scrollIntoView({behavior:'smooth', block:'start'});
+    $('#assistantForm').elements.name.focus();
+  });
+}
